@@ -4,7 +4,7 @@ import Google from "next-auth/providers/google"
 import Github from "next-auth/providers/github"
 import { db } from "@/src/db"
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const authOptions = {
   adapter: DrizzleAdapter(db),
   providers: [
     Google({
@@ -17,14 +17,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
 
- callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
+  callbacks: {
+    async session({ session, user }: { session?: any; user?: any }) {
+      if (session?.user) {
         session.user.id = user.id
         session.user.role = user.role
       }
       return session
     },
   },
-})
+}
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authOptions)
 

@@ -26,8 +26,9 @@ export const protectedRoutes: string[] = [
  */
 
 export const authRoutes: string[] = [
-    "/auth/sign-in",   // Added leading slash
-   
+    // Route group keeps pages at `/sign-in`, but we allow both forms for robustness
+    "/sign-in",
+    "/auth/sign-in",
 ]
 
 /**

@@ -1,21 +1,8 @@
-import NextAuth from "next-auth"
-import GithubProvider from "next-auth/providers/github"
-import GoogleProvider from "next-auth/providers/google"
+import { handlers } from "@/auth"
+export { authOptions } from "@/auth"
 
-export const authOptions = {
-  providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-    }),
-
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID!,
-      clientSecret: process.env.GOOGLE_SECRET!,
-    })
-  ],
-}
-
-const handler = NextAuth(authOptions)
-
-export {handler as GET, handler as POST}
+// Re-export the request handlers created by `NextAuth` in `auth.ts`.
+// `handlers` contains `GET` and `POST` functions; export them directly so
+// Next.js calls the actual functions instead of an object.
+export const GET = handlers.GET
+export const POST = handlers.POST

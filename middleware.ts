@@ -1,5 +1,4 @@
-import NextAuth from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+// Middleware runs in the Edge runtime — avoid importing Node-only modules like 'next-auth' or 'crypto'
 
 import {
   DEFAULT_LOGIN_REDIRECT,
@@ -9,18 +8,23 @@ import {
 } from "@/routes";
 import { NextRequest } from "next/server";
 
-export const { auth } = NextAuth(authOptions)
-
-export default auth((req: NextRequest) => {
+export function middleware(req: NextRequest) {
   const { nextUrl } = req;
-  const authReq = req as NextRequest & {auth?: any}
-  const isLoggedIn = !!authReq.auth
+
+  // Check for common next-auth cookie names instead of relying on server-side NextAuth helpers
+  const sessionCookie = req.cookies.get("__Secure-next-auth.session-token") || req.cookies.get("next-auth.session-token") || req.cookies.get("next-auth.token")
+  const isLoggedIn = !!sessionCookie?.value
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
 
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
 
-  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+  if (nextUrl.pathname === "/auth/sign-in") {
+    return Response.redirect(new URL("/sign-in", nextUrl));
+  }
+
+  // Consider exact matches and optional '/auth' prefix, but prefer exact match first
+  const isAuthRoute = authRoutes.includes(nextUrl.pathname) || authRoutes.some(r => nextUrl.pathname === `/auth${r}`);
 
   if(isApiAuthRoute) return;
 
@@ -38,7 +42,7 @@ export default auth((req: NextRequest) => {
 
   return;
 
-})
+}
 
 export const config = {
   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
