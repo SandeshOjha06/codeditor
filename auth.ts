@@ -1,4 +1,4 @@
-// auth.ts
+import NextAuth from "next-auth"
 import { DrizzleAdapter } from "@auth/drizzle-adapter"
 import Google from "next-auth/providers/google"
 import Github from "next-auth/providers/github"
@@ -6,6 +6,11 @@ import { db } from "@/src/db"
 
 export const authOptions = {
   adapter: DrizzleAdapter(db),
+
+  session: {
+    strategy: "jwt",
+  },
+
   providers: [
     Google({
       clientId: process.env.GOOGLE_ID!,
@@ -16,14 +21,23 @@ export const authOptions = {
       clientSecret: process.env.GITHUB_SECRET!,
     }),
   ],
+
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+      }
+      return token
+    },
+
+    async session({ session, token }) {
+      if (session.user && token.id) {
+        session.user.id = token.id as string
       }
       return session
     },
   },
+
   pages: {
     signIn: "/auth/signin",
   },

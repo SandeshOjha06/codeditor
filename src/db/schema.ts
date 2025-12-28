@@ -7,8 +7,6 @@ import {
   primaryKey,
 } from "drizzle-orm/pg-core"
 
-/* ================= USER ================= */
-
 export const user = pgTable("user", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name"),
@@ -16,8 +14,6 @@ export const user = pgTable("user", {
   emailVerified: timestamp("emailVerified"),
   image: text("image"),
 })
-
-/* ================= ACCOUNT ================= */
 
 export const account = pgTable(
   "account",
@@ -45,8 +41,6 @@ export const account = pgTable(
   })
 )
 
-/* ================= SESSION ================= */
-
 export const session = pgTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
   userId: uuid("userId")
@@ -54,8 +48,6 @@ export const session = pgTable("session", {
     .references(() => user.id, { onDelete: "cascade" }),
   expires: timestamp("expires").notNull(),
 })
-
-/* ================= VERIFICATION TOKEN ================= */
 
 export const verificationToken = pgTable(
   "verificationToken",

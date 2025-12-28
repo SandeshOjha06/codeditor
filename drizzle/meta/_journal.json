@@ -15,6 +15,13 @@
       "when": 1766656517740,
       "tag": "0001_spotty_bushwacker",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1766901456568,
+      "tag": "0002_confused_selene",
+      "breakpoints": true
     }
   ]
 }
