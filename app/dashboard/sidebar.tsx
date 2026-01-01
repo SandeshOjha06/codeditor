@@ -2,8 +2,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import { db } from "@/src/db";
 import { playground } from "@/src/db/schema";
-import {eq, desc} from "drizzle-orm"
+import { eq, desc } from "drizzle-orm"
 import Link from "next/link";
+import NewProjectButton from "./new-project-btn";
 
 export default async function Sidebar() {
   const session = await getServerSession(authOptions)
@@ -24,7 +25,10 @@ export default async function Sidebar() {
         </h2>
       </div>
 
-      {/* List */}
+      <div className="px-4 py-3">
+        <NewProjectButton />
+      </div>
+
       <div className="flex-1 overflow-auto px-2 py-3">
         {playgrounds.length === 0 ? (
           <p className="px-2 text-sm text-gray-500">
@@ -57,7 +61,6 @@ export default async function Sidebar() {
         )}
       </div>
 
-      {/* Footer */}
       <div className="border-t border-gray-700 px-4 py-3 text-xs text-gray-500">
         Click a playground to open
       </div>

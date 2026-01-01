@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 import { authOptions } from "@/auth"
 import Sidebar from "./sidebar"
+import NewProjectButton from "./new-project-btn"
 
 export default async function DashboardLayout({
   children,
@@ -19,7 +20,7 @@ export default async function DashboardLayout({
       <Sidebar />
     </aside>
 
-    <main className="flex-1 overflow-auto p-8 bg-[#121212]">
+ <main className="flex-1 overflow-auto p-8 bg-[#121212]">
       {children}
     </main>
   </div>
