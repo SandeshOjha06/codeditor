@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useTransition } from "react"
 import addPlayground from "./actions"
+import { toast } from "sonner"
 
 export default function KeyboardShortcuts() {
   const [, startTransition] = useTransition()
@@ -21,8 +22,9 @@ export default function KeyboardShortcuts() {
 
       locked.current = true
 
-      startTransition(() => {
-        addPlayground()
+      startTransition(async () => {
+        await addPlayground()
+        toast.success("New Playground Created")
         setTimeout(() => {
           locked.current = false
         }, 700)
